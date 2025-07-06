@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from typing import List
 
 '''
 Example 1: Given an array of positive integers nums and an integer k, find the length of the longest subarray whose sum is less than or equal to k.
@@ -58,7 +59,7 @@ def numSubarrays(nums : list[int], k: int) -> int:
 
 '''
 fixed window size
-Example 4: Given an integer array nums and an integer k, find the sum of the subarray with the largest sum whose length is k.
+Problem 3: Given an integer array nums and an integer k, find the sum of the subarray with the largest sum whose length is k.
 '''
 
 def sumSubarray(nums: list[int], k: int) -> int:
@@ -107,12 +108,43 @@ def findMaxAverage(nums: list[int], k: int) -> float:
     
         
     return ans
+
+def longestOnesWithOneZero(nums: list[int]) -> int:
+    left = curr = ans = 0
+    for right in range(len(nums)):
+        if nums[right] == '0':
+            curr += 1
+        
+        while curr > 1:
+            if nums[left] == '0':
+                curr -= 1
+            left += 1
+            
+        ans = max(ans, right - left + 1)
+    return ans
+
+def longestOnes(nums: List[int], k: int) -> int:
+    left = curr = ans = 0
     
+    for right in range(len(nums)):
+        if nums[right] == 0:
+            curr += 1
+            print(f"curr: {curr} ")
+        
+        while curr > k:
+            if nums[left] == 0:
+                curr -= 1
+            left += 1
+        
+        ans = max(ans, right-left+1)
+    
+    return ans
     
 def main():
-    nums = [1,12,-5,-6,50,3]
-    k = 4
-    res = findMaxAverage(nums, k)
+    nums = [1,1,1,0,0,0,1,1,1,1,0]
+    k = 2
+    res = longestOnes(nums, k)
+    print(f"result: {res}")
     
 
 if __name__ == "__main__":
