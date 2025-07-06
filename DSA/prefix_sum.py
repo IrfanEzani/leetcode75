@@ -66,12 +66,59 @@ def splitArrayElegant(nums: list[int]) -> int:
         right = total - left
         if left >= right:
             ans += 1
+
+
+def minStartValue(nums: list[int]) -> int:
     
+    curr = ans = 1
+    prefix = [nums[0]]
+    for i in range(1, len(nums)):
+        prefix.append(nums[i] + prefix[-1])
+    print(min(prefix)) # this is the minimum step by step
+        
+    for i in range(len(nums)):
+        if abs(prefix[i]) >= curr:
+            print(f"curr: {curr}, prefix[i]: {prefix[i]}")
+            curr = abs(prefix[i]) + 1
+        ans = max(ans, curr)
+            
+    # we can also do this: return 1 - min(prefix)
+    # derived from : minStep + startValue = 1
+    # startValue = 1 - minStep
+
+    
+    return ans
+
+
+
+# A more elegant solution to the prev problem:
+# https://leetcode.com/problems/minimum-value-to-get-positive-step-by-step-sum/editorial
+
+'''
+ iterate over the array using startValue = 0, find the minimum step-by-step total in this iteration (say minVal), according to the previous proof, we should have minVal + startValue = 1, which is exactly startValue = 1 - minVal.
+'''
+def minStartValue(nums: list[int]) -> int:
+    # "total": current step-by-step sum
+    # "min_val" for minimum  step-by-step total among all sums.
+    min_val = 0
+    total = 0
+    # Iterate over the array and get the minimum step-by-step total.
+    for num in nums:
+        total += num
+        min_val = min(min_val, total)
+    
+    # We have to change the minimum step-by-step total to 1, 
+    # by increasing the startValue from 0 to -min_val + 1, 
+    # which is just the minimum startValue we want.
+    
+    #
+    return 1 - min_val
+
 def main():
 
-    nums = [10, 4, -8, 7]
+    nums = [-3,2,-3,4,2]
     queries = [[0, 3], [2, 5], [2, 4]]
-    print(waysToSplitArray(nums))
+    print(minStartValue(nums))
     return 0
 
 
