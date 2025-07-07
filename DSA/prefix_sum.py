@@ -9,7 +9,7 @@ def prefixSum(nums: list[int]) -> list[int]:
         res.append(nums[i] + res[-1])
         
     return res
-    
+
 
 '''
 Given an integer array nums, an array queries where queries[i] = [x, y] and an integer limit, return a boolean array that represents the answer to each query. A query is true if the sum of the subarray from x to y is less than limit, or false otherwise.
@@ -84,17 +84,14 @@ def minStartValue(nums: list[int]) -> int:
             
     # we can also do this: return 1 - min(prefix)
     # derived from : minStep + startValue = 1
-    # startValue = 1 - minStep
-
-    
+    # startValue = 1 - minStep    
     return ans
 
 
-
+'''
 # A more elegant solution to the prev problem:
 # https://leetcode.com/problems/minimum-value-to-get-positive-step-by-step-sum/editorial
 
-'''
  iterate over the array using startValue = 0, find the minimum step-by-step total in this iteration (say minVal), according to the previous proof, we should have minVal + startValue = 1, which is exactly startValue = 1 - minVal.
 '''
 def minStartValue(nums: list[int]) -> int:
@@ -110,16 +107,32 @@ def minStartValue(nums: list[int]) -> int:
     # We have to change the minimum step-by-step total to 1, 
     # by increasing the startValue from 0 to -min_val + 1, 
     # which is just the minimum startValue we want.
-    
-    #
     return 1 - min_val
 
+def getAverages(nums: list[int], k: int) -> list[int]:
+    # prefix array
+    pref = [nums[0]]
+    for i in range(1, len(nums)):
+        pref.append(nums[i] + pref[-1])
+    
+    
+    res = [0] * len(nums)
+    
+    for i in range(len(nums)):
+        if i < k or len(nums) - i - 1 < k:
+            res[i] = -1
+        else:
+            left = i - k
+            right = i + k
+            sub_arr = pref[right] - pref[left] + nums[left]
+            n = 2*k + 1
+            res[i] = int(sub_arr / n)        
+    return res
+    
 def main():
-
-    nums = [-3,2,-3,4,2]
-    queries = [[0, 3], [2, 5], [2, 4]]
-    print(minStartValue(nums))
-    return 0
+    nums = [8]
+    k = 100
+    getAverages(nums, k)
 
 
 if __name__ == "__main__":
