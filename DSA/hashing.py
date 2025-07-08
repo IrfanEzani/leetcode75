@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 def twoSum(nums: list[int], target: int) -> list[int]:
     dic = {}
@@ -123,10 +123,112 @@ def oddSubarray(nums: list[int], k: int) -> int:
     
     return ans
     
+def findWinners(matches: list[list[int]]):
+    winners = []
+    losers = []
+    dic = {}
+    for match in matches:
+        winner, loser = match
+        dic[winner] = dic.get(winner, 0)
+        dic[loser] = dic.get(loser, 0) + 1
+        #print(f"winner: {winner}, loser: {loser}")
     
+    for k, v in dic.items():
+        if v == 0:
+            winners.append(k)
+        if v == 1:
+            losers.append(k)
+        
+    return [sorted(winners), sorted(losers)]        
+    
+def largestUniqueNumber(nums:list[int]):
+    dic = {}
+    res = -1
+    for num in nums:
+        dic[num] = dic.get(num, 0) + 1
+   
+    for k, v in dic.items():
+        if v == 1:
+            res = max(res, k)
+    
+    return res
+
+def maxNumberOfBalloons(text: str) -> int:
+    balloon_dict = Counter("balloon")
+    text_dict = Counter(text)
+    
+    res = len(text)
+    
+    for i in balloon_dict:
+        print(f"{i}: {text_dict[i]}|{balloon_dict[i]}")
+        res = min(res, text_dict[i]//balloon_dict[i])
+    
+    return res   
+    
+def findMaxLength(nums: list[int]) -> int:
+    
+    '''
+    hash map, maps values of count to the first index where that count was seen.
+    maintain value of count and at each index
+    KEY POINT: if we have seen the same value of count before: 
+        subarray starting from where we saw that value of count, 
+        and ending at the current index = equal number of 0s and 1s. 
+    '''
+    count = 0
+    '''
+    count: store the relative number of ones and zeros.
+    + 1 when we see 1, -1 when we see 0.
+    when count = 0, means we saw equal n of 1s and 0s.
+    
+    when we find the same count appears twice: 
+    also means n of 1s and 0s are equal between the indices.
+    '''
+    res = 0
+    dic = {0:-1} # for count: 0 at idx -1
+    
+    # added
+    sub_arr_counts = 0
+    '''
+    tracking the indices corresponding to the same count value,
+    we can get the max length of the subarray.
+    '''
+    for i in range(len(nums)):
+        if nums[i] == 0:
+            count -= 1
+        else:
+            count += 1
+            
+        # if count not in hash map, add to it
+        if count not in dic:
+            dic[count] = i
+        else:
+            print(f"subarray found at index {dic[count]} to {i}:")
+            print([nums[i] for i in range(dic[count]+1, i+1)])
+            sub_arr_counts += 1
+            res = max(res, i - dic[count])
+            
+    
+    
+        
+    return res
+               
+def groupAnagrams(strs: list[str]) -> list[list[str]]:
+    dic = defaultdict(list)
+    for str in strs:
+        keys = "".join(sorted(str)) # sorted version 
+        dic[keys].append(str)
+    
+    return list(dic.values())
+        
 def main():
-    print(oddSubarray([1, 1, 2, 1, 1], 3))
     
+    print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
+    #print(findMaxLength([0,1,0,0,1,1,0]))    
+    #nums = [9,9,8,8]
+    #print(largestUniqueNumber(nums))
+    #res = findWinners([[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]])
+    #print(res)
+    #print(oddSubarray([1, 1, 2, 1, 1], 3))
     #print(areOccurrencesEqual("aaabb"))
     #nums = [[3,1,2,4,5],[1,2,3,4],[3,4,5,6]]
     #print(intersection(nums))
