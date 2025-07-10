@@ -304,14 +304,39 @@ def numJewelsInStones(jewels: str, stones: str) -> int:
     ans = sum(stone in jewel_set for stone in stones)
    
     return ans
-            
-            
-
-def main():
-    jewels = "aA"
-    stones = "aAAbbbb"
-    print(numJewelsInStones(jewels, stones))
+#3        
+def lengthOfLongestSubstring(s: str) -> int:
+    dic = {}
+    res = 0
     
+    left = right = 0
+    
+    while right < len(s):
+        r = s[right]
+        dic[r] = dic.get(r, 0) + 1
+        print(f"r= {r} : {dic[r]}")
+        
+        while dic[r] > 1:
+            l = s[left]
+            print(f"l= {l} : {dic.get(l)}")
+            dic[l] = dic.get(l, 0) - 1
+            left += 1
+        
+        res = max(res, right - left + 1)
+        right += 1
+    
+    return res
+def main():
+    #print(lengthOfLongestSubstring("au")) #2
+    #print(lengthOfLongestSubstring("aab")) #2
+    #print(lengthOfLongestSubstring("abcabcbb")) #3
+    #print(lengthOfLongestSubstring("bbbb")) 
+    print(lengthOfLongestSubstring("pwwkew")) 
+    
+    
+    #jewels = "aA"
+    #stones = "aAAbbbb"
+    #print(numJewelsInStones(jewels, stones))
     #print(equalPairs(grid))
     #grid = [[3,1,2,2],[1,4,4,5],[2,4,2,2],[2,4,2,2]]
     #print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
