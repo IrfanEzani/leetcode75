@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from typing import List
+from collections import Counter
 
 '''
 Example 1: Given an array of positive integers nums and an integer k, find the length of the longest subarray whose sum is less than or equal to k.
@@ -55,7 +56,6 @@ def numSubarrays(nums : list[int], k: int) -> int:
             left -= 1
         # add subarrays. length of window: n. of valid subarray
         ans += right - left + 1
-
 
 '''
 fixed window size
@@ -139,13 +139,25 @@ def longestOnes(nums: List[int], k: int) -> int:
         ans = max(ans, right-left+1)
     
     return ans
+
+def minimumCardPickup(cards: list[int]) -> int: 
+    
+    last_seen = {}
+    min_len = float('inf')
+    
+    for i, card in enumerate(cards):
+        if card in last_seen:
+            # here's the sliding window
+            min_len = min(min_len, i - last_seen[card] + 1)
+        # if not in dict, add card as key and its val as i
+        last_seen[card] = i 
+
+    return min_len if min_len != float('inf') else -1
+            
     
 def main():
-    nums = [1,1,1,0,0,0,1,1,1,1,0]
-    k = 2
-    res = longestOnes(nums, k)
-    print(f"result: {res}")
+    cards = [1,2,6,2,1]
+    print(minimumCardPickup(cards))
     
-
 if __name__ == "__main__":
     main()

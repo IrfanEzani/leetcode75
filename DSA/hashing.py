@@ -219,10 +219,102 @@ def groupAnagrams(strs: list[str]) -> list[list[str]]:
         dic[keys].append(str)
     
     return list(dic.values())
-        
-def main():
+
+def minimumCardPickup(cards: list[int]) -> int:
+    dic = defaultdict(list)
+    for c in range(len(cards)):
+        dic[cards[c]].append(c)
     
-    print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
+    res = 0
+    for k in dic:
+        arr = dic[k]
+        for i in range(len(arr) - 1):
+            #print(f"subarr len: {arr[i+1]} - {arr[i]}: {arr[i+1] - arr[i] + 1}")
+            res = max(res, arr[i+1] - arr[i]+1)
+    
+    return res
+
+# O(N) space complexity version
+def minCardPickup(cards: list[int]) -> int:
+    dic = {}
+    min_len = float('inf')
+    for i in range(len(cards)):
+        if cards[i] in dic:
+            min_len = min(min_len, i - dic[i] + 1)
+        dic[cards[i]] = i
+    
+    return min_len if min_len != float('inf') else -1
+    
+# 2342
+def maximumSum(nums: list[int]) -> int:
+    def digitSum(n: int):
+        sum = 0
+        while n:
+            sum += n % 10 
+            n //= 10    
+        return sum
+    
+    dic = {}
+    ans = -1
+    
+    for num in nums:
+        sum = digitSum(num)
+        if sum in dic:
+            ans = max(ans, num + dic[sum])
+        dic[sum] = max(dic.get(sum, 0), num)
+    
+    return ans
+
+# 2352
+def equalPairs(grid: list[list[int]]) -> int:
+    def convert_to_key(arr):
+        return tuple(arr)
+    
+    rows = {}
+    for row in grid:
+        k = convert_to_key(row)
+        rows[k] = rows.get(k, 0) + 1
+
+    cols = {}
+    for i in range(len(grid[0])):
+        temp = []
+        for j in range(len(grid)):
+            temp.append(grid[j][i])
+        
+        k = convert_to_key(temp)
+        cols[k] = cols.get(k, 0) + 1
+    
+    #print(rows)
+    #print(cols)
+    
+    ans = 0
+    for key in cols:
+        #print(f"{key}: {rows.get(key)} | {cols.get(key)}")
+        if rows.get(key) != None and cols.get(key) != None:
+            ans += rows.get(key) * cols.get(key) 
+            
+    #print(ans)
+    return ans
+        
+        
+def numJewelsInStones(jewels: str, stones: str) -> int:
+    
+    jewel_set = set(jewels)
+    #ans = [i for i in range(len(stones)) if stones[i] in jewel_set]
+    ans = sum(stone in jewel_set for stone in stones)
+   
+    return ans
+            
+            
+
+def main():
+    jewels = "aA"
+    stones = "aAAbbbb"
+    print(numJewelsInStones(jewels, stones))
+    
+    #print(equalPairs(grid))
+    #grid = [[3,1,2,2],[1,4,4,5],[2,4,2,2],[2,4,2,2]]
+    #print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
     #print(findMaxLength([0,1,0,0,1,1,0]))    
     #nums = [9,9,8,8]
     #print(largestUniqueNumber(nums))
